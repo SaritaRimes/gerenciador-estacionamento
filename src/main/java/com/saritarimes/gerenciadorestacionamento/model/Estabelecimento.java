@@ -12,7 +12,7 @@ public class Estabelecimento {
     /* ---------- Propriedades ---------- */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
+//    @JsonIgnore
     private int id;
 
     @Column(nullable = false, length = 50)
@@ -42,6 +42,20 @@ public class Estabelecimento {
 
     @Column(nullable = false)
     private int quantidadeVagasCarros;
+
+    /* ---------- Construtores ---------- */
+    public Estabelecimento() {
+    }
+
+    public Estabelecimento(String nome, String cnpj, String endereco, String telefone,
+                           int quantidadeVagasMotos, int quantidadeVagasCarros) {
+        this.nome = nome;
+        this.cnpj = cnpj;
+        this.endereco = endereco;
+        this.telefone = telefone;
+        this.quantidadeVagasMotos = quantidadeVagasMotos;
+        this.quantidadeVagasCarros = quantidadeVagasCarros;
+    }
 
     /* ---------- Metodos acessores ---------- */
     public int getId() {
