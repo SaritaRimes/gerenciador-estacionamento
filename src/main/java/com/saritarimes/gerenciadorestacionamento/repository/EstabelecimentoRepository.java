@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface EstabelecimentoRepository extends JpaRepository<Estabelecimento, Integer> {
-    Optional<Estabelecimento> findByNome(String nome);
+    Optional<Estabelecimento> findByNomeIgnoreCase(String nome);
 
     Optional<Estabelecimento> findByCnpj(String cnpj);
 

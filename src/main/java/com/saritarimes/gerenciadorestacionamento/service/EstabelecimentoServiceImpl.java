@@ -2,11 +2,14 @@ package com.saritarimes.gerenciadorestacionamento.service;
 
 import com.saritarimes.gerenciadorestacionamento.model.Estabelecimento;
 import com.saritarimes.gerenciadorestacionamento.repository.EstabelecimentoRepository;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.Optional;
 
@@ -21,11 +24,16 @@ public class EstabelecimentoServiceImpl implements EstabelecimentoService {
     }
 
     @Transactional
+    public boolean verificarExistenciaEstabelecimento(Estabelecimento estabelecimento) {
+        return estabelecimento != null;
+    }
+
+    @Transactional
     public void adicionarEstabelecimento(Estabelecimento estabelecimento) {
         Estabelecimento novoEstabelecimento = new Estabelecimento(
-                estabelecimento.getNome(),
+                WordUtils.capitalize(estabelecimento.getNome()),
                 estabelecimento.getCnpj(),
-                estabelecimento.getEndereco(),
+                WordUtils.capitalize(estabelecimento.getEndereco()),
                 estabelecimento.getTelefone(),
                 estabelecimento.getQuantidadeVagasMotos(),
                 estabelecimento.getQuantidadeVagasCarros()
@@ -39,13 +47,13 @@ public class EstabelecimentoServiceImpl implements EstabelecimentoService {
     @Transactional
     public Estabelecimento acessarEstabelecimento(String buscaInserida, char tipoBusca) {
         Optional<Estabelecimento> estabelecimentoOptional;
-        Estabelecimento estabelecimento = new Estabelecimento();
+        Estabelecimento estabelecimento = null;
 
-        if (tipoBusca == 'n')
-            estabelecimentoOptional = estabelecimentoRepository.findByNome(buscaInserida);
-        else if (tipoBusca == 'c')
+        if (tipoBusca == 'n') // busca por nome
+            estabelecimentoOptional = estabelecimentoRepository.findByNomeIgnoreCase(buscaInserida);
+        else if (tipoBusca == 'c') // busca por cnpj
             estabelecimentoOptional = estabelecimentoRepository.findByCnpj(buscaInserida);
-        else if (tipoBusca == 't')
+        else if (tipoBusca == 't') // busca por telefone
             estabelecimentoOptional = estabelecimentoRepository.findByTelefone(buscaInserida);
         else
             estabelecimentoOptional = Optional.empty();
@@ -57,10 +65,36 @@ public class EstabelecimentoServiceImpl implements EstabelecimentoService {
     }
 
     @Transactional
-    public void excluirEstabelecimento(String nome) {
+    public void modificarEstabelecimento(Estabelecimento estabelecimento) {
         char variavelAcesso = 'n';
+        Estabelecimento estabelecimentoEncontrado = acessarEstabelecimento(estabelecimento.getNome(), variavelAcesso);
 
-        estabelecimentoRepository.delete(acessarEstabelecimento(nome, variavelAcesso));
+        if (verificarExistenciaEstabelecimento(estabelecimentoEncontrado)) {
+            estabelecimentoEncontrado.setNome(WordUtils.capitalize(estabelecimento.getNome()));
+            estabelecimentoEncontrado.setCnpj(estabelecimento.getCnpj());
+            estabelecimentoEncontrado.setEndereco(WordUtils.capitalize(estabelecimento.getEndereco()));
+            estabelecimentoEncontrado.setTelefone(estabelecimento.getTelefone());
+            estabelecimentoEncontrado.setQuantidadeVagasMotos(estabelecimento.getQuantidadeVagasMotos());
+            estabelecimentoEncontrado.setQuantidadeVagasCarros(estabelecimento.getQuantidadeVagasCarros());
+
+            salvarEstabelecimento(estabelecimentoEncontrado);
+
+            ResponseEntity.status(HttpStatus.ACCEPTED).body("Estabelecimento atualizado com sucesso.");
+        }
+        else
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estabelecimento não encontrado.");
     }
 
+    @Transactional
+    public void excluirEstabelecimento(String nome) {
+        char variavelAcesso = 'n';
+        Estabelecimento estabelecimento = acessarEstabelecimento(nome, variavelAcesso);
+
+        if (verificarExistenciaEstabelecimento(estabelecimento)) {
+            estabelecimentoRepository.delete(estabelecimento);
+            ResponseEntity.status(HttpStatus.ACCEPTED).body("O estabelecimento foi removido.");
+        }
+        else
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estabelecimento não encontrado.");
+    }
 }

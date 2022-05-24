@@ -12,31 +12,39 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/estabelecimento")
 public class EstabelecimentoController {
     @Autowired
-    EstabelecimentoService estabelecimentoService;
+    private EstabelecimentoService estabelecimentoService;
 
     /*
-    *   Cria (cadastra) um novo estabelecimento
-    */
+     *   Cria (cadastra) um novo estabelecimento
+     */
     @PostMapping(path = "/cadastra-estabelecimento")
     public void cadastrarEstabelecimento(@RequestBody Estabelecimento estabelecimento) {
         estabelecimentoService.adicionarEstabelecimento(estabelecimento);
     }
 
     /*
-    *   Acessa um estabelecimento
-    */
+     *   Acessa um estabelecimento
+     */
     @GetMapping(path = "/acessa-estabelecimento-nome")
     public Estabelecimento acessarEstabelecimentoPorNome(@RequestParam String nome) {
         char variavelAcesso = 'n';
+        Estabelecimento estabelecimento = estabelecimentoService.acessarEstabelecimento(nome, variavelAcesso);
 
-        return estabelecimentoService.acessarEstabelecimento(nome, variavelAcesso);
+        if (!estabelecimentoService.verificarExistenciaEstabelecimento(estabelecimento))
+             ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estabelecimento não encontrado.");
+
+        return estabelecimento;
     }
 
     @GetMapping(path = "/acessa-estabelecimento-cnpj")
     public Estabelecimento acessarEstabelecimentoPorCnpj(@RequestParam String cnpj) {
         char variavelAcesso = 'c';
+        Estabelecimento estabelecimento = estabelecimentoService.acessarEstabelecimento(cnpj, variavelAcesso);
 
-        return estabelecimentoService.acessarEstabelecimento(cnpj, variavelAcesso);
+        if (!estabelecimentoService.verificarExistenciaEstabelecimento(estabelecimento))
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estabelecimento não encontrado.");
+
+        return estabelecimento;
     }
 
     @GetMapping(path = "/acessa-estabelecimento-telefone")
@@ -47,33 +55,17 @@ public class EstabelecimentoController {
     }
 
     /*
-    *   Atualiza dados de um estabelecimento
-    */
+     *   Atualiza dados de um estabelecimento
+     */
     @PutMapping(path = "/atualiza-estabelecimento")
-    public ResponseEntity<?> atualizarEstabelecimento(@RequestBody Estabelecimento estabelecimento) {
-        char variavelAcesso = 'n';
-
-        Estabelecimento estabelecimentoEncontrado = estabelecimentoService.acessarEstabelecimento(estabelecimento.getNome(), variavelAcesso);
-
-        if (estabelecimentoEncontrado != null) {
-            estabelecimentoEncontrado.setNome(estabelecimento.getNome());
-            estabelecimentoEncontrado.setCnpj(estabelecimento.getCnpj());
-            estabelecimentoEncontrado.setEndereco(estabelecimento.getEndereco());
-            estabelecimentoEncontrado.setTelefone(estabelecimento.getTelefone());
-            estabelecimentoEncontrado.setQuantidadeVagasMotos(estabelecimento.getQuantidadeVagasMotos());
-            estabelecimentoEncontrado.setQuantidadeVagasCarros(estabelecimento.getQuantidadeVagasCarros());
-
-            estabelecimentoService.salvarEstabelecimento(estabelecimentoEncontrado);
-
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Estabelecimento atualizado com sucesso.");
-        }
-        else
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estabelecimento não encontrado.");
+    public void atualizarEstabelecimento(@RequestBody Estabelecimento estabelecimento) {
+        estabelecimentoService.modificarEstabelecimento(estabelecimento);
     }
 
     /*
-    *   Exclui estabelecimento
-    */
+     *   Exclui estabelecimento
+     */
+    @DeleteMapping(path = "/remove-estabelecimento")
     public void removerEstabelecimento(@RequestParam String nome) {
         estabelecimentoService.excluirEstabelecimento(nome);
     }
