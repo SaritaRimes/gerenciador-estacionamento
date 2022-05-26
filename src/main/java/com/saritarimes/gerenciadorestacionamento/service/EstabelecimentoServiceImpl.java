@@ -18,6 +18,7 @@ public class EstabelecimentoServiceImpl implements EstabelecimentoService {
     @Autowired
     EstabelecimentoRepository estabelecimentoRepository;
 
+    /* ---------- Metodos ---------- */
     @Transactional
     public void salvarEstabelecimento(Estabelecimento estabelecimento) {
         estabelecimentoRepository.save(estabelecimento);
@@ -36,7 +37,9 @@ public class EstabelecimentoServiceImpl implements EstabelecimentoService {
                 WordUtils.capitalize(estabelecimento.getEndereco()),
                 estabelecimento.getTelefone(),
                 estabelecimento.getQuantidadeVagasMotos(),
-                estabelecimento.getQuantidadeVagasCarros()
+                estabelecimento.getQuantidadeVagasCarros(),
+                estabelecimento.getQuantidadeMotosEstacionadas(),
+                estabelecimento.getQuantidadeCarrosEstacionados()
         );
 
         estabelecimentoRepository.save(novoEstabelecimento);
@@ -76,6 +79,8 @@ public class EstabelecimentoServiceImpl implements EstabelecimentoService {
             estabelecimentoEncontrado.setTelefone(estabelecimento.getTelefone());
             estabelecimentoEncontrado.setQuantidadeVagasMotos(estabelecimento.getQuantidadeVagasMotos());
             estabelecimentoEncontrado.setQuantidadeVagasCarros(estabelecimento.getQuantidadeVagasCarros());
+            estabelecimentoEncontrado.setQuantidadeMotosEstacionadas(estabelecimento.getQuantidadeMotosEstacionadas());
+            estabelecimentoEncontrado.setQuantidadeCarrosEstacionados(estabelecimento.getQuantidadeCarrosEstacionados());
 
             salvarEstabelecimento(estabelecimentoEncontrado);
 
@@ -96,5 +101,85 @@ public class EstabelecimentoServiceImpl implements EstabelecimentoService {
         }
         else
             ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estabelecimento não encontrado.");
+    }
+
+    @Transactional
+    public void controlarEntradaSaida(Estabelecimento estabelecimento, char entradaOuSaida, char tipoVeiculo) {
+        int quantidadeVeiculosAtual;
+
+        if (tipoVeiculo == 'm' || tipoVeiculo == 'M') {
+            quantidadeVeiculosAtual = estabelecimento.getQuantidadeMotosEstacionadas();
+
+            if (entradaOuSaida == 'e') { // entrada de veiculo
+                if (quantidadeVeiculosAtual < 0) // garantindo que nao tenhamos um numero negativo de motos
+                    quantidadeVeiculosAtual = 0;
+
+                estabelecimento.setQuantidadeMotosEstacionadas(quantidadeVeiculosAtual + 1);
+            }
+            else if (entradaOuSaida == 's') { // saida de veiculo
+                if (quantidadeVeiculosAtual <= 0) // garantindo que nao tenhamos um numero negativo de motos
+                    quantidadeVeiculosAtual = 1;
+
+                estabelecimento.setQuantidadeMotosEstacionadas(quantidadeVeiculosAtual - 1);
+            }
+        }
+        else if (tipoVeiculo == 'c' || tipoVeiculo == 'C') {
+            quantidadeVeiculosAtual = estabelecimento.getQuantidadeCarrosEstacionados();
+
+            if (entradaOuSaida == 'e') { // entrada de veiculo
+                if (quantidadeVeiculosAtual < 0) // garantindo que nao tenhamos um numero negativo de carros
+                    quantidadeVeiculosAtual = 0;
+
+                estabelecimento.setQuantidadeCarrosEstacionados(quantidadeVeiculosAtual + 1);
+            }
+            else if (entradaOuSaida == 's') { // saida de veiculo
+                if (quantidadeVeiculosAtual <= 0) // garantindo que nao tenhamos um numero negativo de carros
+                    quantidadeVeiculosAtual = 1;
+
+                estabelecimento.setQuantidadeCarrosEstacionados(quantidadeVeiculosAtual - 1);
+            }
+        }
+
+        salvarEstabelecimento(estabelecimento);
+
+//        int quantidadeVeiculosAtual;
+//        if (novoVeiculo.getTipo() == 'm' || veiculo.getTipo() == 'M') {
+//            quantidadeVeiculosAtual = estabelecimentoReferente.getQuantidadeMotosEstacionadas();
+//
+//            if (quantidadeVeiculosAtual < 0) // garantindo que nao tenhamos um numero negativo de motos
+//                quantidadeVeiculosAtual = 0;
+//
+//            // Somando 1 na quantidade de motos do estabelecimento em questao
+//            estabelecimentoReferente.setQuantidadeMotosEstacionadas(quantidadeVeiculosAtual + 1);
+//        }
+//        else if (novoVeiculo.getTipo() == 'c' || novoVeiculo.getTipo() == 'C') {
+//            quantidadeVeiculosAtual = estabelecimentoReferente.getQuantidadeCarrosEstacionados();
+//
+//            if (quantidadeVeiculosAtual < 0) // garantindo que nao tenhamos um numero negativo de carros
+//                quantidadeVeiculosAtual = 0;
+//
+//            // Somando 1 na quantidade de carros do estabelecimento em questao
+//            estabelecimentoReferente.setQuantidadeCarrosEstacionados(quantidadeVeiculosAtual + 1);
+//        }
+
+//            int quantidadeVeiculosAtual;
+//            if (veiculo.getTipo() == 'm' || veiculo.getTipo() == 'M') {
+//                quantidadeVeiculosAtual = estabelecimentoReferente.getQuantidadeMotosEstacionadas();
+//
+//                if (quantidadeVeiculosAtual <= 0) // garantindo que nao tenhamos um numero negativo de motos
+//                    quantidadeVeiculosAtual = 1;
+//
+//                // Subtraindo 1 na quantidade de motos do estabelecimento em questao
+//                estabelecimentoReferente.setQuantidadeMotosEstacionadas(quantidadeVeiculosAtual - 1);
+//            }
+//            else if (veiculo.getTipo() == 'c' || veiculo.getTipo() == 'C') {
+//                quantidadeVeiculosAtual = estabelecimentoReferente.getQuantidadeCarrosEstacionados();
+//
+//                if (quantidadeVeiculosAtual <= 0) // garantindo que nao tenhamos um numero negativo de carros
+//                    quantidadeVeiculosAtual = 1;
+//
+//                // Subtraindo 1 na quantidade de carros do estabelecimento em questao
+//                estabelecimentoReferente.setQuantidadeCarrosEstacionados(quantidadeVeiculosAtual - 1);
+//            }
     }
 }

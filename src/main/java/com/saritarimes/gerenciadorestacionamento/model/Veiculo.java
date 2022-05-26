@@ -42,12 +42,18 @@ public class Veiculo {
     @Pattern(regexp = "^(cCmM)$", message = "O tipo do veículo deve ser C (carro) ou M (moto).")
     private char tipo;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Estabelecimento estabelecimento;
+
 
     /* ---------- Construtores ---------- */
     public Veiculo() {
     }
 
-    public Veiculo(String marca, String modelo, String cor, String placa, char tipo) {
+    public Veiculo(String marca,
+                   String modelo, String cor, String placa, char tipo) {
+//        this.estabelecimento = estabelecimento;
         this.marca = marca;
         this.modelo = modelo;
         this.cor = cor;
@@ -103,5 +109,13 @@ public class Veiculo {
 
     public void setTipo(char tipo) {
         this.tipo = tipo;
+    }
+
+    public Estabelecimento getEstabelecimento() {
+        return estabelecimento;
+    }
+
+    public void setEstabelecimento(Estabelecimento estabelecimento) {
+        this.estabelecimento = estabelecimento;
     }
 }

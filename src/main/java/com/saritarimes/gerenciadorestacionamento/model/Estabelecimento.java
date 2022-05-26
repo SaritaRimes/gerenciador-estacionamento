@@ -43,13 +43,23 @@ public class Estabelecimento {
     @Column(nullable = false)
     private int quantidadeVagasCarros;
 
+    @Column(nullable = false)
+    private int quantidadeMotosEstacionadas;
+
+    @Column(nullable = false)
+    private int quantidadeCarrosEstacionados;
+
+//    @OneToMany
+//    private Veiculo veiculo;
+
 
     /* ---------- Construtores ---------- */
     public Estabelecimento() {
     }
 
     public Estabelecimento(String nome, String cnpj, String endereco, String telefone,
-                           int quantidadeVagasMotos, int quantidadeVagasCarros) {
+                           int quantidadeVagasMotos, int quantidadeVagasCarros,
+                           int quantidadeMotosEstacionadas, int quantidadeCarrosEstacionados) {
         this.nome = nome;
         this.cnpj = cnpj;
         this.endereco = endereco;
@@ -114,5 +124,21 @@ public class Estabelecimento {
 
     public void setQuantidadeVagasCarros(int quantidadeVagasCarros) {
         this.quantidadeVagasCarros = quantidadeVagasCarros;
+    }
+
+    public int getQuantidadeMotosEstacionadas() {
+        return quantidadeMotosEstacionadas;
+    }
+
+    public void setQuantidadeMotosEstacionadas(int quantidadeMotosEstacionadas) {
+        this.quantidadeMotosEstacionadas = quantidadeMotosEstacionadas;
+    }
+
+    public int getQuantidadeCarrosEstacionados() {
+        return quantidadeCarrosEstacionados;
+    }
+
+    public void setQuantidadeCarrosEstacionados(int quantidadeCarrosEstacionados) {
+        this.quantidadeCarrosEstacionados = quantidadeCarrosEstacionados;
     }
 }

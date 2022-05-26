@@ -9,4 +9,5 @@ public interface EstabelecimentoService {
     public Estabelecimento acessarEstabelecimento(String buscaInserida, char tipoBusca);
     public void modificarEstabelecimento(Estabelecimento estabelecimento);
     public void excluirEstabelecimento(String nome);
+    public void controlarEntradaSaida(Estabelecimento estabelecimento, char entradaOuSaida, char tipoVeiculo);
 }
