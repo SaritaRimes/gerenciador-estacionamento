@@ -11,7 +11,6 @@ import org.mockito.MockitoAnnotations;
 import static org.junit.jupiter.api.Assertions.*;
 
 class VeiculoServiceImplTest {
-
     private VeiculoServiceImpl veiculoService;
     @Mock
     private VeiculoRepository veiculoRepositoryMock;
@@ -38,6 +37,7 @@ class VeiculoServiceImplTest {
     );
 
 
+    /* Verificar existencia de veiculo */
     @Test
     void deveRetornarFalseSeOVeiculoNaoExistir() {
         boolean teste = veiculoService.verificarExistenciaVeiculo(veiculoNulo);
@@ -45,25 +45,10 @@ class VeiculoServiceImplTest {
         assertFalse(teste);
     }
 
+    @Test
     void deveRetornarTrueSeOVeiculoExistir() {
         boolean teste = veiculoService.verificarExistenciaVeiculo(veiculoTeste);
 
         assertTrue(teste);
-    }
-
-    @Test
-    void adicionarVeiculo() {
-    }
-
-    @Test
-    void acessarVeiculo() {
-    }
-
-    @Test
-    void modificarVeiculo() {
-    }
-
-    @Test
-    void excluirVeiculo() {
     }
 }

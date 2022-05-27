@@ -1,12 +1,8 @@
 package com.saritarimes.gerenciadorestacionamento.controller;
 
-import com.saritarimes.gerenciadorestacionamento.model.Estabelecimento;
 import com.saritarimes.gerenciadorestacionamento.model.Veiculo;
-import com.saritarimes.gerenciadorestacionamento.service.EstabelecimentoService;
 import com.saritarimes.gerenciadorestacionamento.service.VeiculoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 public class VeiculoController {
     @Autowired
     VeiculoService veiculoService;
-    @Autowired
-    EstabelecimentoService estabelecimentoService;
 
     /*
      *   Cria (cadastra) um novo veiculo
@@ -36,7 +30,6 @@ public class VeiculoController {
 
         if (!veiculoService.verificarExistenciaVeiculo(veiculo))
             throw new IllegalArgumentException("Veículo não encontrado.");
-//            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Veículo não encontrado.");
 
         return veiculo;
     }

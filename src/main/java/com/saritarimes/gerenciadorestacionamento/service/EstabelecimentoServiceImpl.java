@@ -47,7 +47,7 @@ public class EstabelecimentoServiceImpl implements EstabelecimentoService {
                 estabelecimento.getQuantidadeCarrosEstacionados()
         );
 
-        Estabelecimento salvar = estabelecimentoRepository.save(novoEstabelecimento);
+        estabelecimentoRepository.save(novoEstabelecimento);
 
         ResponseEntity.status(HttpStatus.CREATED).body("Estabelecimento adicionado com sucesso.");
     }
@@ -65,7 +65,6 @@ public class EstabelecimentoServiceImpl implements EstabelecimentoService {
             estabelecimentoOptional = estabelecimentoRepository.findByTelefone(buscaInserida);
         else {
             throw new IllegalArgumentException("Tipo de busca não é válido.");
-//            estabelecimentoOptional = Optional.empty();
         }
 
         if (estabelecimentoOptional.isPresent())
@@ -91,11 +90,10 @@ public class EstabelecimentoServiceImpl implements EstabelecimentoService {
 
             salvarEstabelecimento(estabelecimentoEncontrado);
 
-//            ResponseEntity.status(HttpStatus.ACCEPTED).body("Estabelecimento atualizado com sucesso.");
+            ResponseEntity.status(HttpStatus.ACCEPTED).body("Estabelecimento atualizado com sucesso.");
         }
         else
             throw new IllegalArgumentException("Estabelecimento não encontrado.");
-//            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estabelecimento não encontrado.");
     }
 
     @Transactional
@@ -105,11 +103,10 @@ public class EstabelecimentoServiceImpl implements EstabelecimentoService {
 
         if (verificarExistenciaEstabelecimento(estabelecimento)) {
             estabelecimentoRepository.delete(estabelecimento);
-//            ResponseEntity.status(HttpStatus.ACCEPTED).body("O estabelecimento foi removido.");
+            ResponseEntity.status(HttpStatus.ACCEPTED).body("O estabelecimento foi removido.");
         }
         else
             throw new IllegalArgumentException("Estabelecimento não encontrado.");
-//            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estabelecimento não encontrado.");
     }
 
     @Transactional
@@ -150,45 +147,5 @@ public class EstabelecimentoServiceImpl implements EstabelecimentoService {
         }
 
         salvarEstabelecimento(estabelecimento);
-
-//        int quantidadeVeiculosAtual;
-//        if (novoVeiculo.getTipo() == 'm' || veiculo.getTipo() == 'M') {
-//            quantidadeVeiculosAtual = estabelecimentoReferente.getQuantidadeMotosEstacionadas();
-//
-//            if (quantidadeVeiculosAtual < 0) // garantindo que nao tenhamos um numero negativo de motos
-//                quantidadeVeiculosAtual = 0;
-//
-//            // Somando 1 na quantidade de motos do estabelecimento em questao
-//            estabelecimentoReferente.setQuantidadeMotosEstacionadas(quantidadeVeiculosAtual + 1);
-//        }
-//        else if (novoVeiculo.getTipo() == 'c' || novoVeiculo.getTipo() == 'C') {
-//            quantidadeVeiculosAtual = estabelecimentoReferente.getQuantidadeCarrosEstacionados();
-//
-//            if (quantidadeVeiculosAtual < 0) // garantindo que nao tenhamos um numero negativo de carros
-//                quantidadeVeiculosAtual = 0;
-//
-//            // Somando 1 na quantidade de carros do estabelecimento em questao
-//            estabelecimentoReferente.setQuantidadeCarrosEstacionados(quantidadeVeiculosAtual + 1);
-//        }
-
-//            int quantidadeVeiculosAtual;
-//            if (veiculo.getTipo() == 'm' || veiculo.getTipo() == 'M') {
-//                quantidadeVeiculosAtual = estabelecimentoReferente.getQuantidadeMotosEstacionadas();
-//
-//                if (quantidadeVeiculosAtual <= 0) // garantindo que nao tenhamos um numero negativo de motos
-//                    quantidadeVeiculosAtual = 1;
-//
-//                // Subtraindo 1 na quantidade de motos do estabelecimento em questao
-//                estabelecimentoReferente.setQuantidadeMotosEstacionadas(quantidadeVeiculosAtual - 1);
-//            }
-//            else if (veiculo.getTipo() == 'c' || veiculo.getTipo() == 'C') {
-//                quantidadeVeiculosAtual = estabelecimentoReferente.getQuantidadeCarrosEstacionados();
-//
-//                if (quantidadeVeiculosAtual <= 0) // garantindo que nao tenhamos um numero negativo de carros
-//                    quantidadeVeiculosAtual = 1;
-//
-//                // Subtraindo 1 na quantidade de carros do estabelecimento em questao
-//                estabelecimentoReferente.setQuantidadeCarrosEstacionados(quantidadeVeiculosAtual - 1);
-//            }
     }
 }

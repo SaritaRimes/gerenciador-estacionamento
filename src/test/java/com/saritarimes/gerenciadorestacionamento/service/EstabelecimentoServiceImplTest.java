@@ -11,7 +11,6 @@ import org.mockito.MockitoAnnotations;
 import static org.junit.jupiter.api.Assertions.*;
 
 class EstabelecimentoServiceImplTest {
-
     private EstabelecimentoServiceImpl estabelecimentoService;
     @Mock
     private EstabelecimentoRepository estabelecimentoRepositoryMock;
@@ -51,48 +50,8 @@ class EstabelecimentoServiceImplTest {
 
     @Test
     void deveRetornarTrueSeOEstabelecimentoExistir() {
-//        estabelecimentoService = new EstabelecimentoServiceImpl(estabelecimentoRepositoryMock);
         boolean teste = estabelecimentoService.verificarExistenciaEstabelecimento(estabelecimentoTeste);
 
         assertTrue(teste);
-    }
-
-    /* Adicionar estabelecimento */
-    @Test
-    void adicionarEstabelecimento() {
-    }
-
-    /* Acessar estabelecimento */
-    @Test
-    void deveRetornarNullQuandoNaoForEncontradoEstabelecimentoComNomeInformado() {
-        String nomeNaoExistente = "Estacionamento";
-        Estabelecimento teste = estabelecimentoService.acessarEstabelecimento(nomeNaoExistente, 'n');
-
-        assertNull(teste);
-    }
-
-    @Test
-    void deveRetornarNullQuandoNaoForEncontradoEstabelecimentoComCnpjInformado() {
-        String cnpjNaoExistente = "99988877766655";
-        Estabelecimento teste = estabelecimentoService.acessarEstabelecimento(cnpjNaoExistente, 'c');
-
-        assertNull(teste);
-    }
-
-    @Test
-    void deveRetornarNullQuandoNaoForEncontradoEstabelecimentoComTelefoneInformado() {
-    }
-
-    /* Modificar estabelecimento */
-    @Test
-    void modificarEstabelecimento() {
-    }
-
-    @Test
-    void excluirEstabelecimento() {
-    }
-
-    @Test
-    void controlarEntradaSaida() {
     }
 }

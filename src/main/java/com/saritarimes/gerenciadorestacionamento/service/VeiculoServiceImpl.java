@@ -3,7 +3,6 @@ package com.saritarimes.gerenciadorestacionamento.service;
 import com.saritarimes.gerenciadorestacionamento.model.Estabelecimento;
 import com.saritarimes.gerenciadorestacionamento.model.Veiculo;
 import com.saritarimes.gerenciadorestacionamento.repository.VeiculoRepository;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,6 @@ public class VeiculoServiceImpl implements VeiculoService{
 
 
     /* ---------- Construtores ---------- */
-
     @Autowired
     public VeiculoServiceImpl(VeiculoRepository veiculoRepository) {
         this.veiculoRepository = veiculoRepository;
@@ -47,20 +45,17 @@ public class VeiculoServiceImpl implements VeiculoService{
         /* Verificando se o estabelecimento foi encontrado */
         if (!estabelecimentoService.verificarExistenciaEstabelecimento(estabelecimentoReferente))
             throw new IllegalArgumentException("Estabelecimento não encontrado.");
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estabelecimento não encontrado.");
 
         /* Verificando se ha vagas disponiveis no estabelecimento referente */
         if (veiculo.getTipo() == 'm' || veiculo.getTipo() == 'M') {
             if (estabelecimentoReferente.getQuantidadeVagasMotos() <=
                     estabelecimentoReferente.getQuantidadeMotosEstacionadas())
                 throw new IllegalArgumentException("Não há vagas para motos no estacionamento.");
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Não há vagas para motos no estacionamento.");
         }
         else if (veiculo.getTipo() == 'c' || veiculo.getTipo() == 'C') {
             if (estabelecimentoReferente.getQuantidadeVagasCarros() <=
                     estabelecimentoReferente.getQuantidadeCarrosEstacionados())
                 throw new IllegalArgumentException("Não há vagas para motos no estacionamento.");
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Não há vagas para carros no estacionamento.");
         }
 
         Veiculo novoVeiculo = new Veiculo(
@@ -91,7 +86,6 @@ public class VeiculoServiceImpl implements VeiculoService{
             veiculoOptional = veiculoRepository.findByPlacaIgnoreCase(buscaInserida);
         else {
             throw new IllegalArgumentException("Tipo de busca não é válido.");
-//            veiculoOptional = Optional.empty();
         }
 
         if (veiculoOptional.isPresent())
@@ -115,11 +109,10 @@ public class VeiculoServiceImpl implements VeiculoService{
 
             salvarVeiculo(veiculoEncontrado);
 
-//            ResponseEntity.status(HttpStatus.ACCEPTED).body("Veículo atualizado com sucesso.");
+            ResponseEntity.status(HttpStatus.ACCEPTED).body("Veículo atualizado com sucesso.");
         }
         else
             throw new IllegalArgumentException("Veículo não encontrado.");
-//            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Veículo não encontrado.");
     }
 
     @Transactional
@@ -137,10 +130,9 @@ public class VeiculoServiceImpl implements VeiculoService{
             estabelecimentoService.salvarEstabelecimento(estabelecimentoReferente); // salva os dados do estabelecimento
 
             veiculoRepository.delete(veiculo); // remove veiculo
-//            ResponseEntity.status(HttpStatus.ACCEPTED).body("O veículo foi removido.");
+            ResponseEntity.status(HttpStatus.ACCEPTED).body("O veículo foi removido.");
         }
         else
             throw new IllegalArgumentException("Veículo não encontrado.");
-//            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Veículo não encontrado.");
     }
 }

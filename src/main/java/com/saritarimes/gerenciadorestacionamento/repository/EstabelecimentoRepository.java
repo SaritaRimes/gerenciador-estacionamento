@@ -1,7 +1,6 @@
 package com.saritarimes.gerenciadorestacionamento.repository;
 
 import com.saritarimes.gerenciadorestacionamento.model.Estabelecimento;
-import com.saritarimes.gerenciadorestacionamento.service.EstabelecimentoService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

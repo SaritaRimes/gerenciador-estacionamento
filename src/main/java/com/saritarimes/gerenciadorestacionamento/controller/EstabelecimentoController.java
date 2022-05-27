@@ -2,10 +2,7 @@ package com.saritarimes.gerenciadorestacionamento.controller;
 
 import com.saritarimes.gerenciadorestacionamento.model.Estabelecimento;
 import com.saritarimes.gerenciadorestacionamento.service.EstabelecimentoService;
-import com.saritarimes.gerenciadorestacionamento.service.EstabelecimentoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,7 +28,7 @@ public class EstabelecimentoController {
         Estabelecimento estabelecimento = estabelecimentoService.acessarEstabelecimento(nome, variavelAcesso);
 
         if (!estabelecimentoService.verificarExistenciaEstabelecimento(estabelecimento))
-             ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estabelecimento não encontrado.");
+            throw new IllegalArgumentException("Estabelecimento não encontrado.");
 
         return estabelecimento;
     }
@@ -42,7 +39,7 @@ public class EstabelecimentoController {
         Estabelecimento estabelecimento = estabelecimentoService.acessarEstabelecimento(cnpj, variavelAcesso);
 
         if (!estabelecimentoService.verificarExistenciaEstabelecimento(estabelecimento))
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estabelecimento não encontrado.");
+            throw new IllegalArgumentException("Estabelecimento não encontrado.");
 
         return estabelecimento;
     }

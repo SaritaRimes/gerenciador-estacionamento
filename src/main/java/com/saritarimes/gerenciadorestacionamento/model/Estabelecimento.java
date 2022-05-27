@@ -3,7 +3,6 @@ package com.saritarimes.gerenciadorestacionamento.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -19,12 +18,12 @@ public class Estabelecimento {
     @Size(message = "O campo nome não pode ser deixado em branco.") //verificar se nao eh necessario colocar o min
     @Size(max = 50, message = "O nome é muito longo.")
     @Pattern(regexp = "^[A-Za-z]*", message = "O nome deve conter apenas letras.")
-    private String nome; //adicionar restricao para apenas letras
+    private String nome;
 
     @Column(nullable = false, length = 14)
     @Size(min = 14, max = 14, message = "O CNPJ deve conter 14 numeros.")
     @Pattern(regexp = "^[0-9]*", message = "O CNPJ deve conter apenas números.") //pode ser que nao funcione
-    private String cnpj; //adicionar restricao para apenas numeros
+    private String cnpj;
 
     @Column(nullable = false, length = 100)
     @Size(message = "O campo endereço deve ser preenchido.")
@@ -34,8 +33,8 @@ public class Estabelecimento {
     @Column(nullable = false, length = 11) //supondo telefones no Brasil
     @Size(min = 10, message = "O campo telefone não está completo.")
     @Size(max = 11, message = "O telefone é muito longo.")
-    @Pattern(regexp = "^[0-9]*", message = "O telefone deve conter apenas números.") //pode ser que nao funcione
-    private String telefone; //adicionar restricao para apenas numeros
+    @Pattern(regexp = "^[0-9]*", message = "O telefone deve conter apenas números.")
+    private String telefone;
 
     @Column(nullable = false)
     private int quantidadeVagasMotos;
@@ -48,9 +47,6 @@ public class Estabelecimento {
 
     @Column(nullable = false)
     private int quantidadeCarrosEstacionados;
-
-//    @OneToMany
-//    private Veiculo veiculo;
 
 
     /* ---------- Construtores ---------- */
@@ -66,6 +62,8 @@ public class Estabelecimento {
         this.telefone = telefone;
         this.quantidadeVagasMotos = quantidadeVagasMotos;
         this.quantidadeVagasCarros = quantidadeVagasCarros;
+        this.quantidadeMotosEstacionadas = quantidadeMotosEstacionadas;
+        this.quantidadeCarrosEstacionados = quantidadeCarrosEstacionados;
     }
 
 
