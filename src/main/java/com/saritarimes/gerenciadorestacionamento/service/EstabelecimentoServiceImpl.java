@@ -2,21 +2,26 @@ package com.saritarimes.gerenciadorestacionamento.service;
 
 import com.saritarimes.gerenciadorestacionamento.model.Estabelecimento;
 import com.saritarimes.gerenciadorestacionamento.repository.EstabelecimentoRepository;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 import java.util.Optional;
 
 @Service
 public class EstabelecimentoServiceImpl implements EstabelecimentoService {
-    @Autowired
     EstabelecimentoRepository estabelecimentoRepository;
+
+
+    /* ---------- Construtores ---------- */
+    @Autowired
+    public EstabelecimentoServiceImpl(EstabelecimentoRepository estabelecimentoRepository) {
+        this.estabelecimentoRepository = estabelecimentoRepository;
+    }
+
 
     /* ---------- Metodos ---------- */
     @Transactional
@@ -42,7 +47,7 @@ public class EstabelecimentoServiceImpl implements EstabelecimentoService {
                 estabelecimento.getQuantidadeCarrosEstacionados()
         );
 
-        estabelecimentoRepository.save(novoEstabelecimento);
+        Estabelecimento salvar = estabelecimentoRepository.save(novoEstabelecimento);
 
         ResponseEntity.status(HttpStatus.CREATED).body("Estabelecimento adicionado com sucesso.");
     }
@@ -58,8 +63,10 @@ public class EstabelecimentoServiceImpl implements EstabelecimentoService {
             estabelecimentoOptional = estabelecimentoRepository.findByCnpj(buscaInserida);
         else if (tipoBusca == 't') // busca por telefone
             estabelecimentoOptional = estabelecimentoRepository.findByTelefone(buscaInserida);
-        else
-            estabelecimentoOptional = Optional.empty();
+        else {
+            throw new IllegalArgumentException("Tipo de busca não é válido.");
+//            estabelecimentoOptional = Optional.empty();
+        }
 
         if (estabelecimentoOptional.isPresent())
             estabelecimento = estabelecimentoOptional.get();
@@ -84,10 +91,11 @@ public class EstabelecimentoServiceImpl implements EstabelecimentoService {
 
             salvarEstabelecimento(estabelecimentoEncontrado);
 
-            ResponseEntity.status(HttpStatus.ACCEPTED).body("Estabelecimento atualizado com sucesso.");
+//            ResponseEntity.status(HttpStatus.ACCEPTED).body("Estabelecimento atualizado com sucesso.");
         }
         else
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estabelecimento não encontrado.");
+            throw new IllegalArgumentException("Estabelecimento não encontrado.");
+//            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estabelecimento não encontrado.");
     }
 
     @Transactional
@@ -97,10 +105,11 @@ public class EstabelecimentoServiceImpl implements EstabelecimentoService {
 
         if (verificarExistenciaEstabelecimento(estabelecimento)) {
             estabelecimentoRepository.delete(estabelecimento);
-            ResponseEntity.status(HttpStatus.ACCEPTED).body("O estabelecimento foi removido.");
+//            ResponseEntity.status(HttpStatus.ACCEPTED).body("O estabelecimento foi removido.");
         }
         else
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estabelecimento não encontrado.");
+            throw new IllegalArgumentException("Estabelecimento não encontrado.");
+//            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estabelecimento não encontrado.");
     }
 
     @Transactional

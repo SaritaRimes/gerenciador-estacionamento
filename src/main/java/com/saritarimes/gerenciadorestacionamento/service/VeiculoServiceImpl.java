@@ -15,10 +15,17 @@ import java.util.Optional;
 
 @Service
 public class VeiculoServiceImpl implements VeiculoService{
-    @Autowired
-    private VeiculoRepository veiculoRepository;
+    VeiculoRepository veiculoRepository;
     @Autowired
     private EstabelecimentoService estabelecimentoService;
+
+
+    /* ---------- Construtores ---------- */
+
+    @Autowired
+    public VeiculoServiceImpl(VeiculoRepository veiculoRepository) {
+        this.veiculoRepository = veiculoRepository;
+    }
 
 
     /* ---------- Metodos ---------- */
@@ -33,24 +40,27 @@ public class VeiculoServiceImpl implements VeiculoService{
     }
 
     @Transactional
-    public ResponseEntity<String> adicionarVeiculo(Veiculo veiculo, String nomeEstabelecimento) {
+    public void adicionarVeiculo(Veiculo veiculo, String nomeEstabelecimento) {
         Estabelecimento estabelecimentoReferente =
                 estabelecimentoService.acessarEstabelecimento(nomeEstabelecimento, 'n');
 
         /* Verificando se o estabelecimento foi encontrado */
         if (!estabelecimentoService.verificarExistenciaEstabelecimento(estabelecimentoReferente))
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estabelecimento não encontrado.");
+            throw new IllegalArgumentException("Estabelecimento não encontrado.");
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estabelecimento não encontrado.");
 
         /* Verificando se ha vagas disponiveis no estabelecimento referente */
         if (veiculo.getTipo() == 'm' || veiculo.getTipo() == 'M') {
             if (estabelecimentoReferente.getQuantidadeVagasMotos() <=
                     estabelecimentoReferente.getQuantidadeMotosEstacionadas())
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Não há vagas para motos no estacionamento.");
+                throw new IllegalArgumentException("Não há vagas para motos no estacionamento.");
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Não há vagas para motos no estacionamento.");
         }
         else if (veiculo.getTipo() == 'c' || veiculo.getTipo() == 'C') {
             if (estabelecimentoReferente.getQuantidadeVagasCarros() <=
                     estabelecimentoReferente.getQuantidadeCarrosEstacionados())
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Não há vagas para carros no estacionamento.");
+                throw new IllegalArgumentException("Não há vagas para motos no estacionamento.");
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Não há vagas para carros no estacionamento.");
         }
 
         Veiculo novoVeiculo = new Veiculo(
@@ -69,7 +79,7 @@ public class VeiculoServiceImpl implements VeiculoService{
 
         estabelecimentoService.salvarEstabelecimento(estabelecimentoReferente); // salva os dados do estabelecimento
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Veículo adicionado com sucesso.");
+//        return ResponseEntity.status(HttpStatus.CREATED).body("Veículo adicionado com sucesso.");
     }
 
     @Transactional
@@ -79,8 +89,10 @@ public class VeiculoServiceImpl implements VeiculoService{
 
         if (tipoBusca == 'p') // busca por placa
             veiculoOptional = veiculoRepository.findByPlacaIgnoreCase(buscaInserida);
-        else
-            veiculoOptional = Optional.empty(); // ELE FICA PRESENT?
+        else {
+            throw new IllegalArgumentException("Tipo de busca não é válido.");
+//            veiculoOptional = Optional.empty();
+        }
 
         if (veiculoOptional.isPresent())
             veiculo = veiculoOptional.get();
@@ -103,10 +115,11 @@ public class VeiculoServiceImpl implements VeiculoService{
 
             salvarVeiculo(veiculoEncontrado);
 
-            ResponseEntity.status(HttpStatus.ACCEPTED).body("Veículo atualizado com sucesso.");
+//            ResponseEntity.status(HttpStatus.ACCEPTED).body("Veículo atualizado com sucesso.");
         }
         else
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Veículo não encontrado.");
+            throw new IllegalArgumentException("Veículo não encontrado.");
+//            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Veículo não encontrado.");
     }
 
     @Transactional
@@ -124,9 +137,10 @@ public class VeiculoServiceImpl implements VeiculoService{
             estabelecimentoService.salvarEstabelecimento(estabelecimentoReferente); // salva os dados do estabelecimento
 
             veiculoRepository.delete(veiculo); // remove veiculo
-            ResponseEntity.status(HttpStatus.ACCEPTED).body("O veículo foi removido.");
+//            ResponseEntity.status(HttpStatus.ACCEPTED).body("O veículo foi removido.");
         }
         else
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Veículo não encontrado.");
+            throw new IllegalArgumentException("Veículo não encontrado.");
+//            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Veículo não encontrado.");
     }
 }

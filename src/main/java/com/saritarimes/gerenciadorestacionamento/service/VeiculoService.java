@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 public interface VeiculoService {
     public void salvarVeiculo(Veiculo veiculo);
     public boolean verificarExistenciaVeiculo(Veiculo veiculo);
-    public ResponseEntity<String> adicionarVeiculo(Veiculo veiculo, String nomeEstabelecimento);
+    public void adicionarVeiculo(Veiculo veiculo, String nomeEstabelecimento);
     public Veiculo acessarVeiculo(String buscaInserida, char tipoBusca);
     public void modificarVeiculo(Veiculo veiculo);
     public void excluirVeiculo(String placa);

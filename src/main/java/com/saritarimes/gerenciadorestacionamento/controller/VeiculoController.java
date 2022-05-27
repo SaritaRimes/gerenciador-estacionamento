@@ -35,7 +35,8 @@ public class VeiculoController {
         Veiculo veiculo = veiculoService.acessarVeiculo(placa, variavelAcesso);
 
         if (!veiculoService.verificarExistenciaVeiculo(veiculo))
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Veículo não encontrado.");
+            throw new IllegalArgumentException("Veículo não encontrado.");
+//            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Veículo não encontrado.");
 
         return veiculo;
     }

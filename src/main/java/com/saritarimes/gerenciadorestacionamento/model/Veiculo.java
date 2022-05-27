@@ -51,9 +51,7 @@ public class Veiculo {
     public Veiculo() {
     }
 
-    public Veiculo(String marca,
-                   String modelo, String cor, String placa, char tipo) {
-//        this.estabelecimento = estabelecimento;
+    public Veiculo(String marca, String modelo, String cor, String placa, char tipo) {
         this.marca = marca;
         this.modelo = modelo;
         this.cor = cor;
